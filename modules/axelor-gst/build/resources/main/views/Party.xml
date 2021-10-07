@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+		<selection name="gst.party.type">
+				<option value="Individual">Individual</option>
+				<option value="Company">Company</option>
+		</selection>
+
+		<form model="com.axelor.gst.db.Party" title="Party" name="gst-party-form">
+				<panel>
+						<field name="reference" title="Reference" colSpan="12" />
+						<field name="name" title="Name" />
+						<field name="type" title="Type" widget="SingleSelect" />
+				</panel>
+				<panel>
+						<field name="customer" title="Customer" />
+						<field name="supplier" title="Supplier" />
+						<field name="gstin" title="GSTIN" colSpan="12" min="15" max="15" />
+				</panel>
+				<panel title="Contact">
+						<field name="contactList" showTitle="false" form-view="gst-contact-form" colSpan="12">
+								<editor x-viewer="true" x-show-on-new="true" colSpan="12">
+										<field name="name" title="Name" />
+										<field name="type" title="Type" widget="SingleSelect" />
+										<field name="primaryEmail" title="Primary Email" widget="email" />
+										<field name="secondaryEmail" title="Secondary Email" widget="email" />
+										<field name="primaryPhone" title="Primary Phone" widget="phone" />
+										<field name="secondaryPhone" title="Secondary Phone"  widget="phone" />
+								</editor>
+						</field>
+
+				</panel>
+				<panel title="Address">
+						<field name="addresstList" title="Address" form-view="gst-address-form" colSpan="12" >
+								<editor x-viewer="true" x-show-on-new="true" colSpan="12">
+										<field name="type" title="Type" widget="SingleSelect" />
+										<field name="line1" title="Line1" required="true" />
+										<field name="line2" title="Line 2" />
+										<field name="city" title="City" />
+										<field name="state" title="State" />
+										<field name="country" title="Country" />
+										<field name="pinCode" title="PinCode" />
+								</editor>
+						</field>
+				</panel>
+		</form>
+
+
+		<grid model="com.axelor.gst.db.Party" title="Parties" name="gst-party-grid">
+				<field name="reference" title="Reference" />
+				<field name="name" title="Name" />
+				<field name="type" title="Type" />
+				<field name="customer" title="Customer" />
+				<field name="supplier" title="Supplier" />
+				<field name="gstin" title="GSTIN" />
+				<field name="contactList" title="Contact" grid-view="gst-contact-grid" />
+				<field name="addresstList" title="Address" />
+		</grid>
+
+		<cards name="gst-party-cards" title="Party Card" model="com.axelor.gst.db.Party" orderBy="reference">
+				<field name="reference" title="Reference" />
+				<field name="name" title="Name" />
+				<field name="type" title="Type" />
+				<field name="customer" title="Customer" />
+				<field name="supplier" title="Supplier" />
+				<field name="gstin" title="GSTIN" />
+				<template><![CDATA[
+				  <div class="span4">
+				    <h1>Ref:- {{reference}}</h1>
+				    <div>
+				      <h3>Name:- {{name}}</h3>
+				    <div>
+				      <div>Type:-{{type}} </div>
+				      <div>Customer:-{{customer}} </div>
+				    </div>
+			</div>
+  ]]></template>
+		</cards>
+
+
+</object-views>

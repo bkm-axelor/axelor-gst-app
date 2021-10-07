@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+		<form model="com.axelor.gst.db.Company" title="Company" name="gst-company-form">
+				<panel>
+						<panel colSpan="4">
+								<field name="logo" widget="Image" title="Logo" />
+						</panel>
+						<panel colSpan="8">
+								<field name="name" title="Name" colSpan="12" />
+								<field name="gstIn" title="GSTIN" colSpan="12" />
+						</panel>
+				</panel>
+				<panel title="Contact">
+						<field name="contactList" showTitle="false" form-view="gst-contact-form" colSpan="12">
+								<editor x-viewer="true" x-show-on-new="true" colSpan="12">
+										<field name="name" title="Name" />
+										<field name="type" title="Type" widget="SingleSelect" />
+										<field name="primaryEmail" title="Primary Email" widget="email" />
+										<field name="secondaryEmail" title="Secondary Email" widget="email" />
+										<field name="primaryPhone" title="Primary Phone" widget="phone" />
+										<field name="secondaryPhone" title="Secondary Phone" widget="phone" />
+								</editor>
+						</field>
+				</panel>
+				<panel>
+						<field name="bankDetails" title=" Bank Details" colSpan="12" />
+				</panel>
+				<panel title="Address">
+						<field name="address" showTitle="false" form-view="gst-address-form" canNew="true" colSpan="12" />
+				</panel>
+
+		</form>
+
+		<grid model="com.axelor.gst.db.Company" title="Company" name="gst-company-grid">
+				<field name="logo" widget="Image" title="Logo" />
+				<field name="name" title="Name" />
+				<field name="contactList" title="Contact" />
+				<field name="gstIn" title="GSTIN" />
+				<field name="bankDetails" title=" Bank Details" />
+				<field name="address" title="Address" />
+		</grid>
+
+</object-views>

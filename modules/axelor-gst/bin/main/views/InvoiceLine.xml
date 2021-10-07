@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+		<form model="com.axelor.gst.db.InvoiceLine" title="Invoice Line" name="gst-invoice-line-form">
+				<panel>
+						<field name="product" title="Product" />
+						<field name="hsbn" title="HSBN" />
+				</panel>
+				<panel>
+						<field name="item" title="ITEM" />
+						<field name="quantity" title="Quantity" />
+				</panel>
+				<panel>
+						<field name="netAmount" title="Net Amount" />
+						<field name="igst" title="IGst" />
+						<field name="sgst" title="SGst" />
+						<field name="cgst" title="CGst" />
+						<field name="gstRate" title="Gst Rate" />
+						<field name="grossAmount" title="Gross Amount" />
+				</panel>
+		</form>
+
+		<action-method name="action-invoiceline-method-netamount-onsave">
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getnetamount" />
+		</action-method>
+
+
+		<grid model="com.axelor.gst.db.InvoiceLine" title="Invoice Line" name="gst-invoice-line-grid">
+				<field name="product" title="Product" />
+				<field name="hsbn" title="HSBN" />
+				<field name="item" title="ITEM" />
+				<field name="quantity" title="Quantity" />
+				<field name="netAmount" title="Net Amount" />
+				<field name="gstRate" title="Gst Rate" />
+				<field name="igst" title="IGst" />
+				<field name="sgst" title="SGst" />
+				<field name="cgst" title="CGst" />
+				<field name="grossAmount" title="Gross Amount" />
+		</grid>
+
+</object-views>

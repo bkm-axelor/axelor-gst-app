@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+		<form model="com.axelor.gst.db.Product" title="Product" name="gst-product-form">
+				<panel>
+						<panel colSpan="4">
+								<field name="image" widget="Image" title="Image" help="Add Product Image" />
+						</panel>
+						<panel colSpan="8">
+								<field name="name" title="Name" required="true" />
+								<field name="code" title="Code" required="true" />
+								<field name="hsbn" title="HSBN" colSpan="12" />
+						</panel>
+				</panel>
+				<panel>
+						<field name="category" title="Category" colSpan="12" />
+				</panel>
+				<panel>
+						<field name="costPrice" title="Cost Price" />
+						<field name="gstRate" title="Gst Rate" />
+				</panel>
+		</form>
+
+		<!-- onChange="action-gst-product-category-attr" <action-attrs name="action-gst-product-category-attr">
+				<attribute name="value" for="gstRate" expr="self.gstRate = category." />
+		</action-attrs> -->
+
+		<grid model="com.axelor.gst.db.Product" title="Products" name="gst-product-grid">
+				<toolbar>
+						<button onClick="action-gst-product-invoice-onclick" name="btn-gst-product-invoice" />
+						<button onClick="action-gst-product-report-onclick" name="btn-gst-product-report" />
+				</toolbar>
+				<field name="name" title="Name" />
+				<field name="code" title="Code" />
+				<field name="hsbn" title="HSBN" />
+				<field name="category" title="Category" />
+				<field name="costPrice" title="Cost Price" />
+				<field name="image" title="Image" widget="Image" />
+				<field name="gstRate" title="Gst Rate" />
+		</grid>
+
+		<cards name="gst-product-cards" title="Product Card" model="com.axelor.gst.db.Product">
+				<field name="name" title="Name" />
+				<field name="code" title="Code" />
+				<field name="hsbn" title="HSBN" />
+				<field name="category" title="Category" />
+				<field name="costPrice" title="Cost Price" />
+				<field name="image" title="Image" widget="Image" />
+				<field name="gstRate" title="Gst Rate" />
+				<template><![CDATA[
+				<div class="span4 card-image">
+			        <img ng-if="image" ng-src="{{$image(null, 'image')}}">
+			    </div>
+				  <div class="span4">
+				    <h1>Product Name:- {{name}}</h1>
+				    <div>
+				      <h3>Code:- {{code}}</h3>
+				      <h3>Category:- {{category}}</h3>
+				      </div>
+				</div>
+  				]]></template>
+		</cards>
+</object-views>

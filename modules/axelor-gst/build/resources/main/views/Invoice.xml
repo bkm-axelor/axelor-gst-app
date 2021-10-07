@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://axelor.com/xml/ns/object-views" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
+  http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
+
+		<selection name="gst.invoice.status">
+				<option value="Draft">Draft</option>
+				<option value="Validated">Validated</option>
+				<option value="Paid">Paid</option>
+				<option value="Cancelled">Cancelled</option>
+		</selection>
+
+		<form model="com.axelor.gst.db.Invoice" title="Invoice"  name="gst-invoice-form" onNew="action-gst-invoice-attr-onNew" onSave="action-invoiceline-method-netamount-onsave">
+				<panel>
+						<field name="status" title="Status" widget="NavSelect" colSpan="12" />
+						<panel colSpan="12">
+								<field name="reference" title="Reference" />
+								<field name="company" title="Company" />
+						</panel>
+						<panel colSpan="12">
+								<field name="invoiceDate" title="Invoice Date" widget="date-time" />
+								<field name="priority" title="Priority" widget="Integer" />
+						</panel>
+				</panel>
+				<panel>
+						<field name="party" title="Party" />
+						<field name="partyContact" title="Party Contact" domain="self.party = :party" />  <!-- domain="self.party = :contactList" -->
+						<field name="invoiceAddress" title="Invoice Address" domain="self.party = :party" />
+						<field name="invoiceAddressShipping" title="Use invoice Address as Shipping" />
+				</panel>
+				<panel showIf="invoiceAddressShipping == false">
+						<field name="shippingAddress" title="Shipping Address" colSpan="12" canNew="true" />
+				</panel>
+				<panel>
+						<field name="invoiceItems" title="Invoice Items" colSpan="12" form-view="gst-invoice-line-form" />
+				</panel>
+				<panel>
+						<field name="netAmount" title="Net Amount" />
+						<field name="netIGST" title="Net IGST" />
+						<field name="netCSGT" title="Net CSGT" />
+						<field name="netSGST" title="Net SGST" />
+						<field name="grossAmount" title="Gross Amount" readonly="true"/>
+				</panel>
+		</form>
+
+		<action-attrs name="action-gst-invoice-attr-onNew">
+				<attribute name="value" for="invoiceDate" expr="eval:__datetime__" />
+				<attribute name="value" for="company" expr="#{__repo__(Company).all().fetchOne()}" />
+		</action-attrs>
+
+
+		<grid model="com.axelor.gst.db.Invoice" title="Invoice" name="gst-invoice-grid">
+				<field name="status" title="Status" />
+				<field name="company" title="Company" />
+				<field name="reference" title="Reference" />
+				<field name="invoiceDate" title="Invoice Date" />
+				<field name="priority" title="Priority" />
+				<field name="party" title="Party" />
+				<field name="partyContact" title="Party Contact" />
+				<field name="invoiceAddress" title="Invoice Address" />
+				<field name="shippingAddress" title="Shipping Address" />
+				<field name="invoiceAddressShipping" title="Invoice Address Shipping" />
+				<field name="netAmount" title="Net Amount" />
+				<field name="netIGST" title="Net IGST" />
+				<field name="netCSGT" title="Net CSGT" />
+				<field name="netSGST" title="Net SGST" />
+				<field name="grossAmount" title="Gross Amount" />
+				<field name="invoiceItems" title="Invoice Items" />
+		</grid>
+
+		<kanban name="gst-invoice-kanban" title="Invoice Knban" model="com.axelor.gst.db.Invoice" columnBy="status" sequenceBy="priority" limit="10">
+				<field name="status" title="Status" />
+				<field name="company" title="Company" />
+				<field name="reference" title="Reference" />
+				<field name="invoiceDate" title="Invoice Date" />
+				<field name="priority" title="Priority" />
+				<field name="party" title="Party" />
+				<field name="partyContact" title="Party Contact" />
+				<field name="invoiceAddress" title="Invoice Address" />
+				<field name="shippingAddress" title="Shipping Address" />
+				<field name="invoiceAddressShipping" title="Invoice Address Shipping" />
+				<field name="netAmount" title="Net Amount" />
+				<field name="netIGST" title="Net IGST" />
+				<field name="netCSGT" title="Net CSGT" />
+				<field name="netSGST" title="Net SGST" />
+				<field name="grossAmount" title="Gross Amount" />
+				<field name="invoiceItems" title="Invoice Items" />
+
+				<template><![CDATA[
+			  <h4>{{reference}}</h4>
+			  <div class="card-body">{{netAmount}}</div>
+		  ]]></template>
+		</kanban>
+
+</object-views>
