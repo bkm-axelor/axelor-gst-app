@@ -80,7 +80,7 @@ public class Invoice extends AuditableModel {
 	@Widget(readonly = true)
 	private BigDecimal grossAmount = BigDecimal.ZERO;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<InvoiceLine> invoiceItems;
 
 	@Widget(title = "Attributes")
@@ -232,6 +232,10 @@ public class Invoice extends AuditableModel {
 	/**
 	 * Add the given {@link InvoiceLine} item to the {@code invoiceItems}.
 	 *
+	 * <p>
+	 * It sets {@code item.invoice = this} to ensure the proper relationship.
+	 * </p>
+	 *
 	 * @param item
 	 *            the item to add
 	 */
@@ -240,14 +244,11 @@ public class Invoice extends AuditableModel {
 			setInvoiceItems(new ArrayList<>());
 		}
 		getInvoiceItems().add(item);
+		item.setInvoice(this);
 	}
 
 	/**
 	 * Remove the given {@link InvoiceLine} item from the {@code invoiceItems}.
-	 *
-	 * <p>
-	 * It sets {@code item.null = null} to break the relationship.
-	 * </p>
 	 *
  	 * @param item
 	 *            the item to remove
@@ -263,7 +264,9 @@ public class Invoice extends AuditableModel {
 	 * Clear the {@code invoiceItems} collection.
 	 *
 	 * <p>
-	 * It sets {@code item.null = null} to break the relationship.
+	 * If you have to query {@link InvoiceLine} records in same transaction, make
+	 * sure to call {@link javax.persistence.EntityManager#flush() } to avoid
+	 * unexpected errors.
 	 * </p>
 	 */
 	public void clearInvoiceItems() {

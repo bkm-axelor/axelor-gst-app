@@ -14,6 +14,8 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Type;
@@ -23,7 +25,7 @@ import com.axelor.db.annotations.Widget;
 import com.google.common.base.MoreObjects;
 
 @Entity
-@Table(name = "GST_INVOICE_LINE", indexes = { @Index(columnList = "product") })
+@Table(name = "GST_INVOICE_LINE", indexes = { @Index(columnList = "product"), @Index(columnList = "invoice") })
 public class InvoiceLine extends AuditableModel {
 
 	@Id
@@ -39,8 +41,10 @@ public class InvoiceLine extends AuditableModel {
 
 	private String item;
 
+	@Min(1)
 	private Integer quantity = 0;
 
+	@DecimalMin("1")
 	private BigDecimal price = new BigDecimal("1");
 
 	@Widget(readonly = true)
@@ -60,6 +64,9 @@ public class InvoiceLine extends AuditableModel {
 
 	@Widget(readonly = true)
 	private BigDecimal grossAmount = BigDecimal.ZERO;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	private Invoice invoice;
 
 	@Widget(title = "Attributes")
 	@Basic(fetch = FetchType.LAZY)
@@ -165,6 +172,14 @@ public class InvoiceLine extends AuditableModel {
 
 	public void setGrossAmount(BigDecimal grossAmount) {
 		this.grossAmount = grossAmount;
+	}
+
+	public Invoice getInvoice() {
+		return invoice;
+	}
+
+	public void setInvoice(Invoice invoice) {
+		this.invoice = invoice;
 	}
 
 	public String getAttrs() {

@@ -21,6 +21,6 @@
 				<decimal name="netCSGT" readonly="true"/>
 				<decimal name="netSGST" readonly="true"/>
 				<decimal name="grossAmount" readonly="true" />
-				<one-to-many ref="InvoiceLine" name="invoiceItems"/>
+				<one-to-many ref="InvoiceLine" name="invoiceItems" mappedBy="invoice"/>
 		</entity>
 </domain-models>

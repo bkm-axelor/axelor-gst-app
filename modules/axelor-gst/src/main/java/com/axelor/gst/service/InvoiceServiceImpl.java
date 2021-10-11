@@ -5,64 +5,80 @@ import java.util.List;
 
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
-import com.axelor.rpc.ActionRequest;
-import com.axelor.rpc.ActionResponse;
 
-public class InvoiceServiceImpl  implements InvoiceService {
-	
-	
-	/*
-	 * @Override public BigDecimal netamount(InvoiceLine invoiceline) {
-	 * 
-	 * System.out.println("netamount is called"); Integer quantity =
-	 * invoiceline.getQuantity(); BigDecimal price = invoiceline.getPrice();
-	 * 
-	 * BigDecimal netAmount = invoiceline.getNetAmount();
-	 * 
-	 * BigDecimal qtyvalueOf = BigDecimal.valueOf(quantity) ;
-	 * 
-	 * netAmount = qtyvalueOf.multiply(price);
-	 * 
-	 * return netAmount; }
-	 * 
-	 * @Override public BigDecimal gstrate(InvoiceLine invoiceline) { BigDecimal
-	 * gstRate = invoiceline.getProduct().getGstRate();
-	 * 
-	 * return gstRate; }
-	 */
+public class InvoiceServiceImpl implements InvoiceService {
 
 	@Override
-	public Invoice netamount(Invoice invoiceline,ActionRequest request,ActionResponse response) {
+	public BigDecimal calculatenetamount(Invoice invoice) {
 		
-		System.out.println("netamount is called");
+		BigDecimal totalamount = new BigDecimal(0.00);
+		List<InvoiceLine> invoiceItems = invoice.getInvoiceItems();
 		
-		List<InvoiceLine> invoiceItems = invoiceline.getInvoiceItems();
-		
-		for(InvoiceLine invoice : invoiceItems )
-		{
-			BigDecimal netAmount = invoice.getNetAmount();
-			Integer quantity = invoice.getQuantity();
-			BigDecimal costPrice = invoice.getProduct().getCostPrice();
+		for (InvoiceLine invoiceLine : invoiceItems) {
+			BigDecimal netAmount = invoiceLine.getNetAmount();
+			totalamount = totalamount.add(netAmount);
 			
-			BigDecimal qtyvalueOf = BigDecimal.valueOf(quantity) ;
-			
-			netAmount = qtyvalueOf.multiply(costPrice);
-			
-			invoice.setNetAmount(netAmount);
-			
-			response.setValue("netAmount", netAmount);
-			
-			System.out.println(netAmount);
 		}
-		
-		//invoiceline.setInvoiceItems(invoiceItems);
-		return invoiceline;
+		return totalamount;
 	}
 
 	@Override
-	public BigDecimal gstrate(Invoice invoiceline) {
-		// TODO Auto-generated method stub
-		return null;
+	public BigDecimal calculatenetigst(Invoice invoice) {
+		BigDecimal totalamount = new BigDecimal(0.00);
+		List<InvoiceLine> invoiceItems = invoice.getInvoiceItems();
+		
+		for (InvoiceLine invoiceLine : invoiceItems) {
+			BigDecimal netigst = invoiceLine.getIgst();
+			totalamount = totalamount.add(netigst);
+			
+		}
+		return totalamount;
+	}
+
+	@Override
+	public BigDecimal calculatenetcgst(Invoice invoice) {
+		BigDecimal totalamount = new BigDecimal(0.00);
+		List<InvoiceLine> invoiceItems = invoice.getInvoiceItems();
+		
+		for (InvoiceLine invoiceLine : invoiceItems) {
+			BigDecimal netcgst = invoiceLine.getCgst();
+			totalamount = totalamount.add(netcgst);
+			
+		}
+		return totalamount;
+	}
+
+	@Override
+	public BigDecimal calculatenetsgst(Invoice invoice) {
+		BigDecimal totalamount = new BigDecimal(0.00);
+		List<InvoiceLine> invoiceItems = invoice.getInvoiceItems();
+		
+		for (InvoiceLine invoiceLine : invoiceItems) {
+			BigDecimal netsgst = invoiceLine.getSgst();
+			totalamount = totalamount.add(netsgst);
+			
+		}
+		return totalamount;
+	}
+
+	@Override
+	public BigDecimal calculatenetgamount(Invoice invoice) {
+		BigDecimal totalamount = new BigDecimal(0.00);
+		List<InvoiceLine> invoiceItems = invoice.getInvoiceItems();
+		
+		for (InvoiceLine invoiceLine : invoiceItems) {
+			BigDecimal netgamount = invoiceLine.getGrossAmount();
+			totalamount = totalamount.add(netgamount);
+			
+		}
+		return totalamount;
+	}
+
+	@Override
+	public String generateref(Invoice invoice, SequenceService seq) {
+		String nextNbrAndIncrement = seq.getNextNbrAndIncrement("Invoice");
+		System.out.println(nextNbrAndIncrement);
+		return nextNbrAndIncrement;
 	}
 
 }

@@ -52,6 +52,7 @@ public class Address extends AuditableModel {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private Country country;
 
+	@NotNull
 	private String pinCode;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
