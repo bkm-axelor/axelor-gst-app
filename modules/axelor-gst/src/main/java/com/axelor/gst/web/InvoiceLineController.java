@@ -14,45 +14,45 @@ public class InvoiceLineController {
 
 	
 
-	public void gethsbn(ActionRequest request, ActionResponse response) {
+	public void getHsbn(ActionRequest request, ActionResponse response) {
 
 		InvoiceLine invoiceline = request.getContext().asType(InvoiceLine.class);
 		
-		String hsbn = Beans.get(InvoiceLineService.class).gethsbn(invoiceline);
+		String hsbn = Beans.get(InvoiceLineService.class).getHsbn(invoiceline);
 		
 		invoiceline.setHsbn(hsbn);
 		response.setValue("hsbn", hsbn);
 
 	}
-	public void getprodctname(ActionRequest request, ActionResponse response) {
+	public void getProdctName(ActionRequest request, ActionResponse response) {
 
 		InvoiceLine invoiceline = request.getContext().asType(InvoiceLine.class);
 		
-		String fullname = Beans.get(InvoiceLineService.class).getprodctname(invoiceline);
+		String fullname = Beans.get(InvoiceLineService.class).getProdctName(invoiceline);
 		
 		invoiceline.setItem(fullname);
 		response.setValue("item", fullname);
 	}
-	public void getgst(ActionRequest request, ActionResponse response) {
+	public void getGst(ActionRequest request, ActionResponse response) {
 
 		InvoiceLine invoiceline = request.getContext().asType(InvoiceLine.class);
 		
-		BigDecimal gstRate = Beans.get(InvoiceLineService.class).getgst(invoiceline);
+		BigDecimal gstRate = Beans.get(InvoiceLineService.class).getGst(invoiceline);
 		
 		invoiceline.setGstRate(gstRate);
 		response.setValue("gstRate", gstRate);
 	}
-	public void getprice(ActionRequest request, ActionResponse response) {
+	public void getPrice(ActionRequest request, ActionResponse response) {
 
 		InvoiceLine invoiceline = request.getContext().asType(InvoiceLine.class);
 		
-		BigDecimal costPrice = Beans.get(InvoiceLineService.class).getprice(invoiceline);
+		BigDecimal salePrice = Beans.get(InvoiceLineService.class).getPrice(invoiceline);
 		
-		invoiceline.setPrice(costPrice);
-		response.setValue("price", costPrice);
+		invoiceline.setPrice(salePrice);
+		response.setValue("price", salePrice);
 	}
 	@Transactional
-	public void getamount(ActionRequest request, ActionResponse response) {
+	public void getAmount(ActionRequest request, ActionResponse response) {
 
 		InvoiceLine invoiceline = request.getContext().asType(InvoiceLine.class);
 		Invoice invoice = request.getContext().getParent().asType(Invoice.class);

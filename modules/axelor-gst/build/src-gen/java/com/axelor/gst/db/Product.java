@@ -43,6 +43,8 @@ public class Product extends AuditableModel {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private ProductCategory category;
 
+	private BigDecimal salePrice = BigDecimal.ZERO;
+
 	private BigDecimal costPrice = BigDecimal.ZERO;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -105,6 +107,14 @@ public class Product extends AuditableModel {
 		this.category = category;
 	}
 
+	public BigDecimal getSalePrice() {
+		return salePrice == null ? BigDecimal.ZERO : salePrice;
+	}
+
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
+
 	public BigDecimal getCostPrice() {
 		return costPrice == null ? BigDecimal.ZERO : costPrice;
 	}
@@ -163,6 +173,7 @@ public class Product extends AuditableModel {
 			.add("name", getName())
 			.add("code", getCode())
 			.add("hsbn", getHsbn())
+			.add("salePrice", getSalePrice())
 			.add("costPrice", getCostPrice())
 			.add("gstRate", getGstRate())
 			.omitNullValues()

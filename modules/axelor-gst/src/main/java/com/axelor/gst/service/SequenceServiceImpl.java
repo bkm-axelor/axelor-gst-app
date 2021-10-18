@@ -3,11 +3,13 @@ package com.axelor.gst.service;
 import com.axelor.gst.db.Sequence;
 import com.axelor.gst.db.repo.SequenceRepository;
 import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
 
 public class SequenceServiceImpl implements SequenceService {
 	@Inject
 	SequenceRepository seqRepo;
 
+	// saving seq for first should have number 1
 	@Override
 	public String generateNextNbr(Sequence seq) {
 		// add logic to concate prefix suffix here and return
@@ -16,8 +18,6 @@ public class SequenceServiceImpl implements SequenceService {
 		String suffix = seq.getSuffix();
 		Integer padding = seq.getPadding();
 		String nextnum;
-
-		System.out.println(" " + prefix + " " + suffix + " " + padding);
 
 		StringBuilder sb = new StringBuilder();
 
@@ -34,60 +34,37 @@ public class SequenceServiceImpl implements SequenceService {
 	}
 
 	@Override
-	public String getNextNbrAndIncrement(String modelName) {
-		Sequence seq = seqRepo.all().filter("self.model.name = ?", modelName).fetchOne();
-		/*
-		 * if(seq != null) { seq.get }
-		 */
+	public String getNextNumber(String modelName) {
+		Sequence sequence = seqRepo.all().filter("self.model.name = ?", modelName).fetchOne();
+//		String nextNumber = sequence.getNextNumber();
+//		 this will increment ans save in db
+		String autoIncrementSeq = autoIncrementSeq(sequence);
+		return autoIncrementSeq;
+	}
 
-//		System.out.println(modelName);
+	@Override
+	@Transactional
+	public String autoIncrementSeq(Sequence sequence) {
+		
+		String finalconcat="";
+		
+		if (sequence != null) {
 
-//		System.out.println("hio");
-//		System.out.println(seq);
-		if (seq != null) {
+			String prefix = sequence.getPrefix();
+			String suffix = sequence.getSuffix();
+			String nextNumber = sequence.getNextNumber();
+			Integer padding = sequence.getPadding();
 
-			String prefix = seq.getPrefix();
-			String suffix = seq.getSuffix();
-			String nextNumber = seq.getNextNumber();
-			Integer padding = seq.getPadding();
-
-			String[] split = nextNumber.split(prefix);
-
-			String string = split[1];
-			int parseInt;
-			int length;
-			String finalconcat;
-
-			if (suffix != null) {
-				String[] split2 = string.split(suffix);
-
-				parseInt = Integer.parseInt(split2[0]);
-
-				int parseInt2 = Integer.parseInt(split2[0].replaceAll("[^0-9]", "") + 1);
-
-				String s = Integer.toString(parseInt2);
-
-				length = s.length();
-
-			} else {
-				parseInt = Integer.parseInt(split[1]);
-
-				int parseInt2 = Integer.parseInt(split[1].replaceAll("[^0-9]", "") + 1);
-
-				String s = Integer.toString(parseInt2);
-
-				length = s.length();
-			}
-
-//		System.out.println(parseInt);
-
+			String numberOnly= nextNumber.replaceAll("[^0-9]", "");
+			int parseInt3 = Integer.parseInt(numberOnly)+1;
+			String string2 = Integer.toString(parseInt3);
+			int length2 = string2.length();
+					
 			StringBuilder sb = new StringBuilder();
-			for (int i = padding; i > length; i--) {
+			for (int i = padding; i > length2; i--) {
 				sb.append("0");
 			}
-			String str = sb.append("" + length).toString();
-
-//		System.out.println("next number is "+sb);
+			String str = sb.append(string2).toString();
 
 			if (prefix != null & padding != null & suffix != null) {
 				finalconcat = prefix.concat(str).concat(suffix);
@@ -95,14 +72,13 @@ public class SequenceServiceImpl implements SequenceService {
 				finalconcat = prefix.concat(str);
 			}
 
-			return finalconcat;
-		} else {
-			return null;
+			sequence.setNextNumber(finalconcat);
+			
 		}
-
 		// if seq null throw error from here else return seq.getNextNbr and increment
 		// NextUmber
-
+		seqRepo.save(sequence);
+		return finalconcat;
 	}
 
 }

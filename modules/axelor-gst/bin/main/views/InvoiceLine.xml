@@ -18,7 +18,7 @@
 				<field name="grossAmount" title="Gross Amount" />
 		</grid>
 
-		<form model="com.axelor.gst.db.InvoiceLine" title="Invoice Line" name="gst-invoice-line-form" >
+		<form model="com.axelor.gst.db.InvoiceLine" title="Invoice Line" name="gst-invoice-line-form">
 				<panel>
 						<field name="product" title="Product" onChange="action-invoiceline-assign-group-onchange" />
 						<field name="hsbn" title="HSBN" />
@@ -37,36 +37,36 @@
 						<field name="grossAmount" title="Gross Amount" />
 				</panel>
 		</form>
-		
+
 		<action-group name="action-invoiceline-assign-group-onchange">
-		<action name="action-gst-invoiceline-gethsbn-method"/>
-		<action name="action-gst-invoiceline-getprodctname-method"/>
-		<action name="action-gst-invoiceline-getgst-method"/>
-		<action name="action-gst-invoiceline-getprice-method"/>
+				<action name="action-gst-invoiceline-gethsbn-method" />
+				<action name="action-gst-invoiceline-getprodctname-method" />
+				<action name="action-gst-invoiceline-getgst-method" />
+				<action name="action-gst-invoiceline-getprice-method" />
 		</action-group>
 
 		<action-method name="action-gst-invoiceline-gethsbn-method">
-				<call class="com.axelor.gst.web.InvoiceLineController" method="gethsbn" />
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getHsbn" />
 		</action-method>
-		
+
 		<action-method name="action-gst-invoiceline-getprice-method">
-				<call class="com.axelor.gst.web.InvoiceLineController" method="getprice" />
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getPrice" />
 		</action-method>
-		
+
 		<action-method name="action-gst-invoiceline-getprodctname-method">
-				<call class="com.axelor.gst.web.InvoiceLineController" method="getprodctname" />
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getProdctName" />
 		</action-method>
-		
+
 		<action-method name="action-gst-invoiceline-getgst-method">
-				<call class="com.axelor.gst.web.InvoiceLineController" method="getgst" />
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getGst" />
 		</action-method>
 
 		<action-group name="action-gst-getamount-group">
 				<action name="action-invoiceline-method-quantity-onchange" if="quantity > 0 &amp; price >0" />
 		</action-group>
-		
+
 		<action-method name="action-invoiceline-method-quantity-onchange">
-				<call class="com.axelor.gst.web.InvoiceLineController" method="getamount" />
+				<call class="com.axelor.gst.web.InvoiceLineController" method="getAmount" />
 		</action-method>
 
 </object-views>

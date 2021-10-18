@@ -5,18 +5,14 @@ import java.util.List;
 
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
-import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.persist.Transactional;
 
 public class InvoiceLineServiceImpl implements InvoiceLineService {
 
-	
 	@Override
 	public Invoice netamount(Invoice invoiceline, ActionRequest request, ActionResponse response) {
-
-		System.out.println("netamount is called");
 
 		List<InvoiceLine> invoiceItems = invoiceline.getInvoiceItems();
 
@@ -36,85 +32,76 @@ public class InvoiceLineServiceImpl implements InvoiceLineService {
 			System.out.println(netAmount);
 		}
 
-		// invoiceline.setInvoiceItems(invoiceItems);
 		return invoiceline;
 	}
 
 	@Override
-	public BigDecimal gstrate(Invoice invoiceline) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getHsbn(InvoiceLine invoiceline) {
+		String hsbn = invoiceline.getProduct().getHsbn();
+		return hsbn;
 	}
 
 	@Override
-	public BigDecimal getamount(BigDecimal price, Integer quantity) {
+	public BigDecimal getGst(InvoiceLine invoiceline) {
+		BigDecimal gstRate = invoiceline.getProduct().getGstRate();
+		return gstRate;
+	}
+
+	@Override
+	public BigDecimal getPrice(InvoiceLine invoiceline) {
+	BigDecimal salePrice = invoiceline.getProduct().getSalePrice();
+		return salePrice;
+	}
+
+	@Override
+	public String getProdctName(InvoiceLine invoiceline) {
+		String prodctname = invoiceline.getProduct().getName();
+		String code = invoiceline.getProduct().getCode();
+
+		String fullname = code.concat(prodctname);
+
+		return fullname;
+	}
+
+	@Override
+	public BigDecimal getAmount(BigDecimal price, Integer quantity) {
 
 		BigDecimal qtyvalueOf = BigDecimal.valueOf(quantity);
 
 		if (price != null & qtyvalueOf != null) {
 			BigDecimal netAmount = qtyvalueOf.multiply(price);
 			return netAmount;
-		}
-		else {
+		} else {
 			return null;
 		}
-		
+
 	}
 
-	@Override
-	public String gethsbn(InvoiceLine invoiceline) {
-		String hsbn = invoiceline.getProduct().getHsbn();
-		return hsbn;
-	}
-
-	@Override
-	public BigDecimal getgst(InvoiceLine invoiceline) {
-		BigDecimal gstRate = invoiceline.getProduct().getGstRate();
-		return gstRate;
-	}
-
-	@Override
-	public BigDecimal getprice(InvoiceLine invoiceline) {
-		BigDecimal costPrice = invoiceline.getProduct().getCostPrice();
-		return costPrice;
-	}
-
-	@Override
-	public String getprodctname(InvoiceLine invoiceline) {
-		String prodctname = invoiceline.getProduct().getName();
-		String code = invoiceline.getProduct().getCode();
-
-		String fullname = code.concat(prodctname);
-		
-		return fullname;
-	}
-	
 	@Transactional
-	public void getnetamount(InvoiceLine invoiceline,Invoice invoice,ActionResponse response) {
-		
+	public void getnetamount(InvoiceLine invoiceline, Invoice invoice, ActionResponse response) {
+
 		String invoicestate = invoice.getInvoiceAddress().getState().getName();
 		String companystate = invoice.getCompany().getAddress().getState().getName();
 
 		BigDecimal price = invoiceline.getPrice();
 		Integer quantity = invoiceline.getQuantity();
-		BigDecimal gstRate = invoiceline.getGstRate();
+		BigDecimal gstRate = invoiceline.getGstRate().divide(BigDecimal.valueOf(100));
 
 		BigDecimal res;
-		BigDecimal total = new BigDecimal(0.00);
+		BigDecimal total = BigDecimal.ZERO;
 
 		try {
 
-			BigDecimal newinvoice = Beans.get(InvoiceLineService.class).getamount(price, quantity);
+			BigDecimal newinvoice = getAmount(price, quantity);
 
 			if (newinvoice != null) {
 
 				response.setValue("netAmount", newinvoice);
-				
+
 				total = total.add(newinvoice);
 
 				if (invoicestate.isEmpty() || companystate.isEmpty()) {
-
-					response.setError("Enter the address of company or party");
+					response.setNotify("Enter the address of company or party");
 
 				} else {
 					BigDecimal multiply = gstRate.multiply(newinvoice);
@@ -124,14 +111,16 @@ public class InvoiceLineServiceImpl implements InvoiceLineService {
 						BigDecimal divider = new BigDecimal(2.00);
 
 						res = multiply.divide(divider);
-						
+
 						response.setValue("sgst", res);
 						response.setValue("cgst", res);
-
+						response.setValue("igst", BigDecimal.ZERO);
 						total = total.add(res);
 
 					} else {
 						response.setValue("igst", multiply);
+						response.setValue("sgst", BigDecimal.ZERO);
+						response.setValue("cgst", BigDecimal.ZERO);
 						total = total.add(multiply);
 					}
 				}
@@ -140,13 +129,21 @@ public class InvoiceLineServiceImpl implements InvoiceLineService {
 
 			}
 
-		}catch (NullPointerException e) {
-
-			response.setError("Check there is some null value");
-		}catch (Exception e) {
-
-			response.setError("Error");
+		} catch (NullPointerException e) {
+			response.setNotify("Check there is some null value");
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+			response.setNotify("Check there some error in console");
 		}
 	}
-
+	
+	
+	public BigDecimal calculatedSgst(BigDecimal multiply) {
+		BigDecimal divider = new BigDecimal(2.00);
+		
+		BigDecimal res = multiply.divide(divider);
+		
+		return res;
+	}
+	
 }

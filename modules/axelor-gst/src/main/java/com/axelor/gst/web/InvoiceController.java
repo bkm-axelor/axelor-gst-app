@@ -3,97 +3,90 @@ package com.axelor.gst.web;
 import java.math.BigDecimal;
 
 import com.axelor.gst.db.Invoice;
-import com.axelor.gst.db.Sequence;
 import com.axelor.gst.db.repo.InvoiceRepository;
 import com.axelor.gst.service.InvoiceService;
-import com.axelor.gst.service.SequenceService;
 import com.axelor.inject.Beans;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
-import com.google.inject.Inject;
 
 public class InvoiceController {
 
-	@Inject
-	SequenceService seq;
-	
-	@Inject
-	InvoiceRepository irpo;
-
-	public void calculatenetamount(ActionRequest request, ActionResponse response) {
+	public void calculateNetAmount(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 
-		BigDecimal calculatenetamount = Beans.get(InvoiceService.class).calculatenetamount(invoice);
+		BigDecimal calculatenetamount = Beans.get(InvoiceService.class).calculateNetAmount(invoice);
 
 		response.setValue("netAmount", calculatenetamount);
 
 	}
 
-	public void calculatenetigst(ActionRequest request, ActionResponse response) {
+	public void calculateNetIgst(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 
-		BigDecimal calculatenetigst = Beans.get(InvoiceService.class).calculatenetigst(invoice);
+		BigDecimal calculatenetigst = Beans.get(InvoiceService.class).calculateNetIgst(invoice);
 
 		response.setValue("netIGST", calculatenetigst);
 
 	}
 
-	public void calculatenetcgst(ActionRequest request, ActionResponse response) {
+	public void calculateNetCgst(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 
-		BigDecimal calculatenetcgst = Beans.get(InvoiceService.class).calculatenetcgst(invoice);
+		BigDecimal calculatenetcgst = Beans.get(InvoiceService.class).calculateNetCgst(invoice);
 
 		response.setValue("netCSGT", calculatenetcgst);
 
 	}
 
-	public void calculatenetsgst(ActionRequest request, ActionResponse response) {
+	public void calculateNetSgst(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 
-		BigDecimal calculatenetsgst = Beans.get(InvoiceService.class).calculatenetsgst(invoice);
+		BigDecimal calculatenetsgst = Beans.get(InvoiceService.class).calculateNetSgst(invoice);
 
 		response.setValue("netSGST", calculatenetsgst);
 
 	}
 
-	public void calculatenetgamount(ActionRequest request, ActionResponse response) {
+	public void calculateNetGrossAmount(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 
-		BigDecimal calculatenetgamount = Beans.get(InvoiceService.class).calculatenetgamount(invoice);
+		BigDecimal calculatenetgamount = Beans.get(InvoiceService.class).calculateNetGrossAmount(invoice);
 
 		response.setValue("grossAmount", calculatenetgamount);
 
 	}
 
-	public void generateref(ActionRequest request, ActionResponse response) {
+	public void calculateInvoiceLine(ActionRequest request, ActionResponse response) {
 
 		Invoice invoice = request.getContext().asType(Invoice.class);
 		
-		// Invoice invoices = irpo.all().fetchOne().
+		System.out.println("hi2");
 		
-//		System.out.println(invoices);
-		
-		Long id = invoice.getId();
-		
-		String generateref;
-		
-		if (id != null) {
-			generateref = invoice.getReference();
-		} else {
-			generateref = Beans.get(InvoiceService.class).generateref(invoice, seq);
+		if(!invoice.getInvoiceItems().isEmpty()) {
+			System.out.println(invoice);
 			
-			if(generateref == null) {
-				response.setError("enter the model name");
-			}
+			Beans.get(InvoiceService.class).getNetAmount(invoice, response);
+		}
+	}
+
+	// validate onclick method call
+	public void validate(ActionRequest request, ActionResponse response) {
+		Invoice invoice = request.getContext().asType(Invoice.class);
+		if(invoice.getId() != null) {
+			invoice = Beans.get(InvoiceRepository.class).find(invoice.getId());
+			// calll seq service and save
+			Beans.get(InvoiceService.class).setReference(invoice,response);
+			//response.setReload(true);
+			//response.setValue(fieldName, value);
+		} else {
+			Beans.get(InvoiceService.class).setReference(invoice,response);
 		}
 		
-		invoice.setReference(generateref);
-		response.setValue("reference", generateref);
 	}
 
 }

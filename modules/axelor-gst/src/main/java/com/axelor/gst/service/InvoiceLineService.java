@@ -11,17 +11,15 @@ public interface InvoiceLineService {
 
 	public Invoice netamount(Invoice invoiceline,ActionRequest request,ActionResponse response);
 
-	public BigDecimal gstrate(Invoice invoiceline);
+	public BigDecimal getAmount(BigDecimal price, Integer quantity);
 
-	public BigDecimal getamount(BigDecimal price, Integer quantity);
+	public String getHsbn(InvoiceLine invoiceline);
 
-	public String gethsbn(InvoiceLine invoiceline);
+	public BigDecimal getGst(InvoiceLine invoiceline);
 
-	public BigDecimal getgst(InvoiceLine invoiceline);
+	public BigDecimal getPrice(InvoiceLine invoiceline);
 
-	public BigDecimal getprice(InvoiceLine invoiceline);
-
-	public String getprodctname(InvoiceLine invoiceline);
+	public String getProdctName(InvoiceLine invoiceline);
 	
 	public void getnetamount(InvoiceLine invoiceline,Invoice invoice,ActionResponse response);
 

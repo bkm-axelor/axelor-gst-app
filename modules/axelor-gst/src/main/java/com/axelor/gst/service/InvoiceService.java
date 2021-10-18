@@ -3,20 +3,22 @@ package com.axelor.gst.service;
 import java.math.BigDecimal;
 
 import com.axelor.gst.db.Invoice;
+import com.axelor.rpc.ActionResponse;
 
 public interface InvoiceService {
-	
-	public BigDecimal calculatenetamount(Invoice invoice);
 
-	public BigDecimal calculatenetigst(Invoice invoice);
+	public BigDecimal calculateNetAmount(Invoice invoice);
 
-	public BigDecimal calculatenetcgst(Invoice invoice);
+	public BigDecimal calculateNetIgst(Invoice invoice);
 
-	public BigDecimal calculatenetsgst(Invoice invoice);
+	public BigDecimal calculateNetCgst(Invoice invoice);
 
-	public BigDecimal calculatenetgamount(Invoice invoice);
+	public BigDecimal calculateNetSgst(Invoice invoice);
 
-	public String generateref(Invoice invoice, SequenceService seq);
+	public BigDecimal calculateNetGrossAmount(Invoice invoice);
 
+	public void getNetAmount(Invoice invoice, ActionResponse response);
+
+	public void setReference(Invoice invoice, ActionResponse response);
 
 }

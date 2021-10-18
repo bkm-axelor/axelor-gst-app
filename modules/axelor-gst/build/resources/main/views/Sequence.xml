@@ -11,7 +11,7 @@
 				<field name="model" title="Model" />
 		</grid>
 
-		<form model="com.axelor.gst.db.Sequence" title="Sequence" name="gst-sequence-form" onSave="action-sequence-method-generate-next-number-onsave" onLoad="action-seq-model-nextnum-method">
+		<form model="com.axelor.gst.db.Sequence" title="Sequence" name="gst-sequence-form" onSave="action-sequence-method-generate-next-number-onsave" >
 				<panel>
 						<field name="prefix" title="Prefix" />
 						<field name="suffix" title="Suffix" />
@@ -29,8 +29,8 @@
 				<call class="com.axelor.gst.web.SequenceController" method="nextnum" />
 		</action-method>
 		
-		<action-method name="action-seq-model-nextnum-method">
+	<!-- 	<action-method name="action-seq-model-nextnum-method">
 				<call class="com.axelor.gst.web.SequenceController" method="getNextNbrAndIncrement" />
-		</action-method>
+		</action-method> -->
 
 </object-views>

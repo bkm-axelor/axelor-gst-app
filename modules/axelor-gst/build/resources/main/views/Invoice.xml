@@ -62,7 +62,7 @@
 				<panel sidebar="true">
 						<static>Change Status</static>
 						<button onClick="action-btn-draft-attr" name="btn-gst-invoice-status-Draft" title="Draft" css="btn-default" showIf="status=='Cancelled'" />
-						<button onClick="action-btn-validate-attr" name="btn-gst-invoice-status-Validated" title="Validate" />
+						<button onClick="action-validate-group" name="btn-gst-invoice-status-Validated" title="Validate" showIf="status=='Draft'" />
 						<button onClick="action-btn-paid-attr" name="btn-gst-invoice-status-Paid" title="Paid" css="btn-success" showIf="status=='Validated'" />
 						<button onClick="action-btn-cancle-attr" name="btn-gst-invoice-status-Cancelled" title="Cancelled" css="btn-danger" hideIf="status=='Cancelled'" />
 				</panel>
@@ -70,7 +70,7 @@
 						<field name="status" title="Status" widget="NavSelect" colSpan="12" />
 						<panel colSpan="12">
 								<field name="reference" title="Reference" />
-								<field name="company" title="Company" onChange="action-gst-invoiceitem-group" />
+								<field name="company" title="Company" onChange="action-invoice-address-method-onchange" />
 						</panel>
 						<panel colSpan="12">
 								<field name="invoiceDate" title="Invoice Date" widget="date-time" />
@@ -79,9 +79,9 @@
 				</panel>
 				<panel>
 						<field name="party" title="Party" onChange="action-gst-party-onchange" />
-						<field name="partyContact" title="Party Contact" domain="self.party = :party" />
-						<field name="invoiceAddress" title="Invoice Address" domain="self.party = :party" onChange="action-gst-invoiceitem-group" />
-						<field name="invoiceAddressShipping" title="Use invoice Address as Shipping" />
+						<field name="partyContact" title="Party Contact" domain="self.party = :party" hideIf="!party" />
+						<field name="invoiceAddress" title="Invoice Address" domain="self.party = :party" onChange="action-invoice-address-method-onchange" hideIf="!party" />
+						<field name="invoiceAddressShipping" title="Use invoice Address as Shipping" hideIf="!party" />
 				</panel>
 				<panel showIf="invoiceAddressShipping == false">
 						<field name="shippingAddress" title="Shipping Address" colSpan="12" canNew="true" />
@@ -98,6 +98,15 @@
 				</panel>
 		</form>
 
+		<action-group name="action-invoice-address-method-onchange">
+				<action name="action-gst-invoice-invoiceitem-onchange" if="!invoiceItems" />
+				<action name="action-gst-invoiceline-product-calculate-method" />
+		</action-group>
+
+		<action-method name="action-gst-invoiceline-product-calculate-method">
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateInvoiceLine" />
+		</action-method>
+		
 		<action-report output="Invoice-${date}${time}" name="action-invoice-report-onclick-btn" design="invoice_report.rptdesign" format="pdf">
 				<param name="invoiceId" expr="eval: id" />
 		</action-report>
@@ -106,11 +115,6 @@
 				<attribute name="value" for="invoiceAddress" expr=" " />
 				<attribute name="value" for="partyContact" expr=" " />
 		</action-attrs>
-
-
-		<action-group name="action-gst-invoiceitem-group">
-				<action name="action-gst-invoice-invoiceitem-onchange" />  <!-- if="!company &amp; !invoiceAddress &amp; !invoiceItems" -->
-		</action-group>
 
 		<action-attrs name="action-btn-draft-attr">
 				<attribute name="value" for="status" expr="Draft" />
@@ -142,21 +146,27 @@
 		</action-group>
 
 		<action-method name="action-gst-invoiceitems-method-netamount">
-				<call class="com.axelor.gst.web.InvoiceController" method="calculatenetamount" />
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateNetAmount" />
 		</action-method>
 
 		<action-method name="action-gst-invoiceitems-method-netigst">
-				<call class="com.axelor.gst.web.InvoiceController" method="calculatenetigst" />
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateNetIgst" />
 		</action-method>
 		<action-method name="action-gst-invoiceitems-method-netcgst">
-				<call class="com.axelor.gst.web.InvoiceController" method="calculatenetcgst" />
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateNetCgst" />
 		</action-method>
 		<action-method name="action-gst-invoiceitems-method-netsgst">
-				<call class="com.axelor.gst.web.InvoiceController" method="calculatenetsgst" />
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateNetSgst" />
 		</action-method>
 		<action-method name="action-gst-invoiceitems-method-netgamount">
-				<call class="com.axelor.gst.web.InvoiceController" method="calculatenetgamount" />
+				<call class="com.axelor.gst.web.InvoiceController" method="calculateNetGrossAmount" />
+		</action-method>
+		<action-method name="action-gst-invoice-refrence-method">
+				<call class="com.axelor.gst.web.InvoiceController" method="validate" />
 		</action-method>
 
-
+		<action-group name="action-validate-group">
+				<action name="action-btn-validate-attr" />
+				<action name="action-gst-invoice-refrence-method" />
+		</action-group>
 </object-views>

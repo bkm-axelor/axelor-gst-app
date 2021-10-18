@@ -83,7 +83,9 @@
 		<menuitem title="Draft Invoice" name="menu-gst-draft-invoice" parent="menu-invoice-root" action="action-gst-invoice-draft-views" icon="fa fa-angle-right" />
 		<action-view name="action-gst-invoice-draft-views" title="Draft Invoice" model="com.axelor.gst.db.Invoice">
 				<view type="grid" name="gst-invoice-grid" />
-				<domain>self.status = 'Draft'</domain>
+				<view type="form" name="gst-invoice-form" />
+				<domain>self.status = :Draft</domain>
+				<context name="Draft" expr="Draft" />
 		</action-view>
 
 		<!-- Validate -->
@@ -138,9 +140,33 @@
 
 		<!-- Sequence -->
 		<menuitem title="Sequence" name="menu-gst-sequence" parent="menu-company-root" action="action-gst-sequence-views" icon="fa fa-angle-right" />
-		<action-view name="action-gst-sequence-views" title="Bank account" model="com.axelor.gst.db.Sequence">
+		<action-view name="action-gst-sequence-views" title="Sequence" model="com.axelor.gst.db.Sequence">
 				<view type="grid" name="gst-sequence-grid" />
 				<view type="form" name="gst-sequence-form" />
 		</action-view>
+
+		<!-- DashBoard -->
+
+		<menuitem name="menu-dashboards" title="Dashboards" icon="fa-dashboard" icon-background="blue" action="gst-dashboard-result" />
+
+		<action-view name="gst-dashboard-result" title="Dashboard!">
+				<view type="dashboard" name="result.dashboard" />
+		</action-view>
+		
+		<action-view name="gst-dashboard-grid" title="Grid View" model="com.axelor.gst.db.Invoice">
+				<view type="grid" name="gst-invoice-grid"  />
+				<domain>self.invoice_date dates :calculatedDate</domain>
+				<context name="calculatedDate" expr="call:com.axelor.gst.web.DateCalculation:calculateMonth(dates)"/>
+				
+		</action-view>
+		
+		<dashboard name="result.dashboard" title="DashBoards!">
+				<dashlet action="chart:chart-gst-result-bar" />
+				<dashlet action="chart:chart-gst-paid-productresult-bar" />
+				<dashlet action="chart:chart-gst-customer-state-pie" />
+				<dashlet action="chart:chart-gst-invoice-status-bar" />
+				<dashlet action="chart:chart-gst-invoice-status-line" />
+				<dashlet action="gst-dashboard-grid" title="Older  Invoices" ></dashlet>
+		</dashboard>
 
 </object-views>

@@ -15,27 +15,31 @@
 						</panel>
 				</panel>
 				<panel>
-						<field name="category" title="Category" colSpan="12" />
+						<field name="category" title="Category" colSpan="12" onChange="action-product-category-onchange" />
 				</panel>
 				<panel>
+						<field name="salePrice" title="Sale Price" />
 						<field name="costPrice" title="Cost Price" />
 						<field name="gstRate" title="Gst Rate" />
 				</panel>
 		</form>
 
-		<!-- onChange="action-gst-product-category-attr" <action-attrs name="action-gst-product-category-attr">
-				<attribute name="value" for="gstRate" expr="self.gstRate = category." />
-		</action-attrs> -->
+		<action-method name="action-product-category-onchange">
+				<call class="com.axelor.gst.web.ProductController" method="getGst" />
+		</action-method>
+		
+		<action-report output="Product-${date}${time}" name="action-gst-product-report-onclick" design="product_report.rptdesign" format="pdf" />
 
 		<grid model="com.axelor.gst.db.Product" title="Products" name="gst-product-grid">
 				<toolbar>
 						<button onClick="action-gst-product-invoice-onclick" name="btn-gst-product-invoice" />
-						<button onClick="action-gst-product-report-onclick" name="btn-gst-product-report" />
+						<button onClick="action-gst-product-report-onclick" name="btn-gst-product-report" title="Report" />
 				</toolbar>
 				<field name="name" title="Name" />
 				<field name="code" title="Code" />
 				<field name="hsbn" title="HSBN" />
 				<field name="category" title="Category" />
+				<field name="salePrice" title="Sale Price" />
 				<field name="costPrice" title="Cost Price" />
 				<field name="image" title="Image" widget="Image" />
 				<field name="gstRate" title="Gst Rate" />
@@ -54,10 +58,9 @@
 			        <img ng-if="image" ng-src="{{$image(null, 'image')}}">
 			    </div>
 				  <div class="span4">
-				    <h1>Product Name:- {{name}}</h1>
+				    <h4>Product Name:- {{name}}</h4>
 				    <div>
-				      <h3>Code:- {{code}}</h3>
-				      <h3>Category:- {{category}}</h3>
+				      <p>Code:- {{code}}</p>
 				      </div>
 				</div>
   				]]></template>
