@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.axelor.gst.db.Invoice;
 import com.axelor.gst.db.InvoiceLine;
+import com.axelor.gst.db.Product;
 import com.axelor.gst.db.repo.InvoiceRepository;
 import com.axelor.rpc.ActionResponse;
 import com.google.inject.Inject;
@@ -18,7 +19,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 	InvoiceRepository invoiceRepository;
 	@Inject
 	InvoiceLineServiceImpl invoiceLineServiceImpl;
-
+	
 	@Override
 	public BigDecimal calculateNetAmount(Invoice invoice) {
 
@@ -96,7 +97,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 			String invoicestate = invoice.getInvoiceAddress().getState().getName();
 			String companystate = invoice.getCompany().getAddress().getState().getName();
+			
 			BigDecimal amount = invoice.getNetAmount();
+			
+			if(amount != null) {
+				amount = invoiceLineServiceImpl.getAmount(invoiceLine.getPrice(),invoiceLine.getQuantity());
+			}
 
 			BigDecimal total = BigDecimal.ZERO;
 			total = total.add(amount);
@@ -134,9 +140,46 @@ public class InvoiceServiceImpl implements InvoiceService {
 		response.setValue("reference", refrence);
 		if (invoice.getId() != null) {
 			invoice.setStatus("Validated");
-			invoiceRepository.save(invoice);
+			invoiceRepository.refresh(invoice);
 			response.setReload(true);
 		}
+	}
+
+	@Override
+	public void setReferenceRemove(Invoice invoice, ActionResponse response) {
+		response.setValue("reference", "");
+		invoice.setReference("");
+		if (invoice.getId() != null) {
+			invoice.setStatus("Cancelled");
+			invoiceRepository.refresh(invoice);
+			response.setReload(true);
+		}
+	}
+
+	@Override
+	public InvoiceLine setNewInvoice(InvoiceLine invoiceLine) {
+		Product product = invoiceLine.getProduct();
+
+		if (product.getGstRate() != new BigDecimal("0")) {
+			invoiceLine.setGstRate(product.getGstRate());
+		}
+		if (product.getHsbn() != null) {
+			invoiceLine.setHsbn(product.getHsbn());
+		}
+		if (product.getSalePrice() != null) {
+			invoiceLine.setPrice(product.getSalePrice());
+		}
+		if (invoiceLine.getQuantity() == 0) {
+			invoiceLine.setQuantity(1);
+		}
+		if (invoiceLine.getPrice() != null) {
+			BigDecimal amount = invoiceLineServiceImpl.getAmount(invoiceLine.getPrice(),invoiceLine.getQuantity());
+			invoiceLine.setNetAmount(amount);
+		}
+		invoiceLine.setItem(product.getName() + "" + product.getCode());
+
+		System.err.println(invoiceLine);
+		return invoiceLine;
 	}
 
 }

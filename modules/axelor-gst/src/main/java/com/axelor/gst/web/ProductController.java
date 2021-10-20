@@ -11,8 +11,9 @@ public class ProductController {
 	public void getGst(ActionRequest request, ActionResponse response) {
 
 		Product product = request.getContext().asType(Product.class);
-		
+
 		BigDecimal gstRate = product.getCategory().getGstRate();
 		response.setValue("gstRate", gstRate);
 	}
+	
 }

@@ -118,6 +118,7 @@
 				<view type="grid" name="gst-invoice-grid" />
 				<view type="form" name="gst-invoice-form" />
 				<view type="kanban" name="gst-invoice-kanban" />
+				<!-- <view-param name="details-view" value="true" /> -->
 				<domain>self.id is not null</domain>
 		</action-view>
 

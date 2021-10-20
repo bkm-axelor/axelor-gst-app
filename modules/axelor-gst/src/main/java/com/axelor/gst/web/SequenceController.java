@@ -3,7 +3,6 @@ package com.axelor.gst.web;
 import com.axelor.gst.db.Sequence;
 import com.axelor.gst.service.SequenceService;
 import com.axelor.inject.Beans;
-import com.axelor.meta.db.MetaModel;
 import com.axelor.rpc.ActionRequest;
 import com.axelor.rpc.ActionResponse;
 
@@ -17,6 +16,15 @@ public class SequenceController {
 		
 		response.setValue("nextNumber", nextNum);
 	}
+	/*
+	 * public void nextNumberLoad(ActionRequest request, ActionResponse response) {
+	 * Sequence sequence = request.getContext().asType(Sequence.class);
+	 * 
+	 * String nextNum = Beans.get(SequenceService.class).autoIncrementSeq(sequence);
+	 * 
+	 * response.setValue("nextNumber", nextNum); }
+	 */
+	
 	
 //	public void getNextNbrAndIncrement(ActionRequest request, ActionResponse response) {
 //		Sequence sequence = request.getContext().asType(Sequence.class);

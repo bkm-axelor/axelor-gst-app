@@ -27,12 +27,21 @@
 		<action-method name="action-product-category-onchange">
 				<call class="com.axelor.gst.web.ProductController" method="getGst" />
 		</action-method>
-		
+
 		<action-report output="Product-${date}${time}" name="action-gst-product-report-onclick" design="product_report.rptdesign" format="pdf" />
+
+		<!-- ,action-gst-product-create-invoice <action-method name="action-gst-product-create-invoice">
+				<call class="com.axelor.gst.web.ProductController" method="createInvoice" />
+		</action-method> -->
+		
+		<action-view name="action-gst-invoice-view" title="Productinvoice" model="com.axelor.gst.db.Invoice">
+				<view type="form" name="gst-invoice-form" />
+				<context name="_ids" expr="eval:_ids" />
+		</action-view>
 
 		<grid model="com.axelor.gst.db.Product" title="Products" name="gst-product-grid">
 				<toolbar>
-						<button onClick="action-gst-product-invoice-onclick" name="btn-gst-product-invoice" />
+						<button onClick="action-gst-invoice-view" name="btn-gst-product-invoice" title="Create Invoice" />
 						<button onClick="action-gst-product-report-onclick" name="btn-gst-product-report" title="Report" />
 				</toolbar>
 				<field name="name" title="Name" />

@@ -118,6 +118,7 @@
 				<view type="grid" name="gst-invoice-grid" />
 				<view type="form" name="gst-invoice-form" />
 				<view type="kanban" name="gst-invoice-kanban" />
+				<!-- <view-param name="details-view" value="true" /> -->
 				<domain>self.id is not null</domain>
 		</action-view>
 
@@ -155,9 +156,7 @@
 		
 		<action-view name="gst-dashboard-grid" title="Grid View" model="com.axelor.gst.db.Invoice">
 				<view type="grid" name="gst-invoice-grid"  />
-				<domain>self.invoice_date dates :calculatedDate</domain>
-				<context name="calculatedDate" expr="call:com.axelor.gst.web.DateCalculation:calculateMonth(dates)"/>
-				
+				<domain>self.status='Validated' and self.invoiceDate &lt; CURRENT_DATE()-30</domain>
 		</action-view>
 		
 		<dashboard name="result.dashboard" title="DashBoards!">

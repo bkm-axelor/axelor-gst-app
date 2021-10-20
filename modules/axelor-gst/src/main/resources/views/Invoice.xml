@@ -55,7 +55,7 @@
 
 
 
-		<form model="com.axelor.gst.db.Invoice" title="Invoice" name="gst-invoice-form" onNew="action-gst-invoice-attr-onNew">
+		<form model="com.axelor.gst.db.Invoice" title="Invoice" name="gst-invoice-form" onNew="action-gst-invoice-attr-onNew,action-invoice-method-select-product">
 				<toolbar>
 						<button onClick="action-invoice-report-onclick-btn" name="btn-print" showIf="id" title="Print" icon="fa-print" showTitle="false" iconHover="Print"></button>
 				</toolbar>
@@ -64,7 +64,7 @@
 						<button onClick="action-btn-draft-attr" name="btn-gst-invoice-status-Draft" title="Draft" css="btn-default" showIf="status=='Cancelled'" />
 						<button onClick="action-validate-group" name="btn-gst-invoice-status-Validated" title="Validate" showIf="status=='Draft'" />
 						<button onClick="action-btn-paid-attr" name="btn-gst-invoice-status-Paid" title="Paid" css="btn-success" showIf="status=='Validated'" />
-						<button onClick="action-btn-cancle-attr" name="btn-gst-invoice-status-Cancelled" title="Cancelled" css="btn-danger" hideIf="status=='Cancelled'" />
+						<button onClick="action-btn-cancle-attr,action-canclled-onclick" name="btn-gst-invoice-status-Cancelled" title="Cancelled" css="btn-danger" hideIf="status=='Cancelled'" />
 				</panel>
 				<panel>
 						<field name="status" title="Status" widget="NavSelect" colSpan="12" />
@@ -98,10 +98,17 @@
 				</panel>
 		</form>
 
+		<action-method name="action-invoice-method-select-product">
+				<call class="com.axelor.gst.web.InvoiceController" method="selectedProduct" />
+		</action-method>
+
+		<action-method name="action-canclled-onclick">
+				<call class="com.axelor.gst.web.InvoiceController" method="setRefenceOnCanclled" />
+		</action-method>
+
 		<action-group name="action-invoice-address-method-onchange">
 				<action name="action-gst-invoiceline-product-calculate-method" if="invoiceItems" />
 				<action name="action-gst-invoice-invoiceitem-onchange" if="invoiceItems" />
-
 		</action-group>
 
 		<action-method name="action-gst-invoiceline-product-calculate-method">

@@ -39,15 +39,17 @@ public class SequenceServiceImpl implements SequenceService {
 //		String nextNumber = sequence.getNextNumber();
 //		 this will increment ans save in db
 		String autoIncrementSeq = autoIncrementSeq(sequence);
+		sequence.setNextNumber(autoIncrementSeq);
+		seqRepo.save(sequence);
 		return autoIncrementSeq;
 	}
 
 	@Override
 	@Transactional
 	public String autoIncrementSeq(Sequence sequence) {
-		
-		String finalconcat="";
-		
+
+		String finalconcat = "";
+
 		if (sequence != null) {
 
 			String prefix = sequence.getPrefix();
@@ -55,11 +57,11 @@ public class SequenceServiceImpl implements SequenceService {
 			String nextNumber = sequence.getNextNumber();
 			Integer padding = sequence.getPadding();
 
-			String numberOnly= nextNumber.replaceAll("[^0-9]", "");
-			int parseInt3 = Integer.parseInt(numberOnly)+1;
+			String numberOnly = nextNumber.replaceAll("[^0-9]", "");
+			int parseInt3 = Integer.parseInt(numberOnly) + 1;
 			String string2 = Integer.toString(parseInt3);
 			int length2 = string2.length();
-					
+
 			StringBuilder sb = new StringBuilder();
 			for (int i = padding; i > length2; i--) {
 				sb.append("0");
@@ -72,12 +74,10 @@ public class SequenceServiceImpl implements SequenceService {
 				finalconcat = prefix.concat(str);
 			}
 
-			sequence.setNextNumber(finalconcat);
-			
 		}
 		// if seq null throw error from here else return seq.getNextNbr and increment
 		// NextUmber
-		seqRepo.save(sequence);
+
 		return finalconcat;
 	}
 

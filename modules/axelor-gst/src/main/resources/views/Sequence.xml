@@ -3,7 +3,7 @@
 		xsi:schemaLocation="http://axelor.com/xml/ns/object-views
   http://axelor.com/xml/ns/object-views/object-views_5.4.xsd">
 
-		<grid model="com.axelor.gst.db.Sequence" title="Sequence" name="gst-sequence-grid">
+		<grid model="com.axelor.gst.db.Sequence" title="Sequence" name="gst-sequence-grid" >
 				<field name="prefix" title="Prefix" />
 				<field name="suffix" title="Suffix" />
 				<field name="padding" widget="Integer" title="Padding" />
@@ -28,7 +28,10 @@
 		<action-method name="action-sequence-method-generate-next-number-onsave">
 				<call class="com.axelor.gst.web.SequenceController" method="nextnum" />
 		</action-method>
-		
+		<!-- onLoad="action-sequence-next-number"
+		<action-method name="action-sequence-next-number">
+				<call class="com.axelor.gst.web.SequenceController" method="nextNumberLoad" />
+		</action-method> -->
 	<!-- 	<action-method name="action-seq-model-nextnum-method">
 				<call class="com.axelor.gst.web.SequenceController" method="getNextNbrAndIncrement" />
 		</action-method> -->
