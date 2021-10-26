@@ -24,7 +24,7 @@ apply plugin: 'com.axelor.app'
 
 
 axelor {
-  title = "Axelor :: AopProject"
+  title = "Axelor :: Axelor Gst"
 }
 
 allprojects {

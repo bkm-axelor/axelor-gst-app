@@ -17,20 +17,26 @@ public class SequenceServiceImpl implements SequenceService {
 		String prefix = seq.getPrefix();
 		String suffix = seq.getSuffix();
 		Integer padding = seq.getPadding();
-		String nextnum;
 
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < padding; i++) {
-
-			sb.append("0");
-		}
-		if (prefix != null & padding != null & suffix != null) {
-			nextnum = prefix.concat(sb.toString()).concat(suffix);
+		if (seq.getId() != null) {
+			String autoIncrementSeq = autoIncrementSeq(seq);
+			return autoIncrementSeq;
 		} else {
-			nextnum = prefix.concat(sb.toString());
+			String nextnum;
+			StringBuilder sb = new StringBuilder();
+
+			for (int i = 0; i < padding; i++) {
+
+				sb.append("0");
+			}
+			if (prefix != null & padding != null & suffix != null) {
+				nextnum = prefix.concat(sb.toString()).concat(suffix);
+			} else {
+				nextnum = prefix.concat(sb.toString());
+			}
+			return nextnum;
 		}
-		return nextnum;
+
 	}
 
 	@Override

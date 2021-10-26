@@ -58,7 +58,7 @@ public class InvoiceLineServiceImpl implements InvoiceLineService {
 		String prodctname = invoiceline.getProduct().getName();
 		String code = invoiceline.getProduct().getCode();
 
-		String fullname = code.concat(prodctname);
+		String fullname = prodctname.concat(" ").concat(code);
 
 		return fullname;
 	}
